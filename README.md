@@ -77,7 +77,9 @@ copy .env.example .env
 ## Detalles
 
 Usa OpenRouter con el modelo `deepseek/deepseek-v4.1-flash`; puedes elegir otro
-con `--modelo ID_DEL_MODELO`. En el modo interactivo, escribe `salir` para
+con `--modelo ID_DEL_MODELO`. Cada respuesta se limita a 8192 tokens (cámbialo
+con `--max-tokens N`); sin ese límite el SDK pide 131072 y OpenRouter rechaza la
+petición (error 402) si la clave tiene poco crédito. En el modo interactivo, escribe `salir` para
 terminar.
 
 La clave se lee de `.env` al arrancar. Si `OPENROUTER_API_KEY` ya está definida

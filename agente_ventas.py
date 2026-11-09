@@ -19,6 +19,7 @@ from pydantic import BaseModel, Field
 
 ROOT = Path(__file__).resolve().parent
 DB_PATH = ROOT / "sales_data.db"
+PROVIDER_NAME = "openrouter"
 SYSTEM_PROMPT = """Eres un analista de datos de ventas con acceso a una base SQLite.
 Tabla sales: Store_Number INTEGER, SKU_Coded INTEGER,
 Product_Class_Code INTEGER, Sold_Date TEXT (AAAA-MM-DD),
@@ -61,7 +62,7 @@ def get_api_key() -> str:
     return key
 
 
-async def run(question: str | None, model: str) -> None:
+async def run(question: str | None, model: str, max_tokens: int) -> None:
     if not DB_PATH.is_file():
         raise FileNotFoundError(f"No existe la base de datos: {DB_PATH}")
     client = CopilotClient(
@@ -71,15 +72,22 @@ async def run(question: str | None, model: str) -> None:
     )
     await client.start()
     try:
+        # Proveedor y modelo con nombre: es la única vía en la que el runtime
+        # respeta max_output_tokens. Sin ella pide 131072 tokens por llamada y
+        # OpenRouter rechaza la petición (402) si la clave tiene poco crédito.
         session = await client.create_session(
             on_permission_request=PermissionHandler.approve_all,
-            model=model,
-            provider={
-                "type": "openai",
-                "base_url": "https://openrouter.ai/api/v1",
-                "wire_api": "responses",
-                "api_key": get_api_key(),
-            },
+            model=f"{PROVIDER_NAME}/{model}",
+            providers=[
+                {
+                    "name": PROVIDER_NAME,
+                    "type": "openai",
+                    "base_url": "https://openrouter.ai/api/v1",
+                    "wire_api": "responses",
+                    "api_key": get_api_key(),
+                }
+            ],
+            models=[{"id": model, "provider": PROVIDER_NAME, "max_output_tokens": max_tokens}],
             streaming=True,
             tools=[query_sales],
             available_tools=["custom:query_sales"],
@@ -124,9 +132,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Agente de análisis de ventas")
     parser.add_argument("--pregunta", help="Pregunta única, sin abrir el modo interactivo")
     parser.add_argument("--modelo", default="deepseek/deepseek-v4.1-flash", help="Modelo de OpenRouter")
+    parser.add_argument("--max-tokens", type=int, default=8192, help="Máximo de tokens por respuesta")
     args = parser.parse_args()
     try:
-        asyncio.run(run(args.pregunta, args.modelo))
+        asyncio.run(run(args.pregunta, args.modelo, args.max_tokens))
     except Exception as exc:
         print(f"Error: {exc}", file=sys.stderr)
         sys.exit(1)
