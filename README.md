@@ -3,8 +3,9 @@
 Extraído de la sección **Agente simple de ventas** de `original.ipynb`.
 Incluye `sales_data.db`, descargada desde el enlace del notebook.
 
-El repositorio es <https://github.com/juananpe/agente-ventas>. La aplicación web
-y los ficheros de Docker están en la rama **`codex/web`**.
+El repositorio es <https://github.com/marianovelasco/agente-ventas> (basado en
+<https://github.com/juananpe/agente-ventas>). La aplicación web
+y los ficheros de Docker están en la rama **`web`**.
 
 ## Requisitos
 
@@ -18,7 +19,7 @@ y los ficheros de Docker están en la rama **`codex/web`**.
 Clona el repositorio:
 
 ```sh
-git clone -b codex/web https://github.com/juananpe/agente-ventas.git
+git clone -b web https://github.com/marianovelasco/agente-ventas.git
 cd agente-ventas
 ```
 
@@ -137,7 +138,7 @@ ssh -i ./studentNN_ed25519 studentNN@ssh.ikasten.dev
 **2. Clona el repositorio**:
 
 ```sh
-git clone -b codex/web https://github.com/juananpe/agente-ventas.git
+git clone -b web https://github.com/marianovelasco/agente-ventas.git
 cd agente-ventas
 ```
 
