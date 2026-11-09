@@ -3,7 +3,8 @@
 Extraído de la sección **Agente simple de ventas** de `original.ipynb`.
 Incluye `sales_data.db`, descargada desde el enlace del notebook.
 
-Repositorio: <https://github.com/juananpe/agente-ventas>
+Repositorio: <https://github.com/marianovelasco/agente-ventas>
+Basado en <https://github.com/juananpe/agente-ventas>.
 
 ## Puesta en marcha con el contenedor (recomendada)
 
@@ -14,7 +15,7 @@ Solo necesitas [Docker](https://www.docker.com/products/docker-desktop/) y
 1. Clona el repositorio:
 
 ```sh
-git clone https://github.com/juananpe/agente-ventas.git
+git clone https://github.com/marianovelasco/agente-ventas.git
 ```
 
 2. Abre esa carpeta en VS Code y elige **Reopen in Container**
@@ -89,4 +90,4 @@ desarrollo ya lo trae predescargado).
 La base SQLite se abre en modo de solo lectura y se devuelven como máximo 100
 filas por consulta.
 
-La versión con interfaz web vive en la rama `codex/web`.
+La versión con interfaz web vive en la rama `web`.
